@@ -7,10 +7,10 @@ let users = [];
 
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
-    let validUsers = users.filter(user => {
+    let validUser = users.filter(user => {
         return(user.username === username);
     })
-    if(validUsers.length > 0) {
+    if(validUser.length > 0) {
         return true;
     } else {
         return false;
@@ -19,10 +19,10 @@ const isValid = (username)=>{ //returns boolean
 
 const authenticatedUser = (username,password)=>{ //returns boolean
 //write code to check if username and password match the one we have in records.
-    let filteredUsers = users.filter(user =>{
+    let filteredUser = users.filter(user =>{
         return (user.username === username && user.password === password);
     });
-    if (filteredUsers.length > 0){
+    if (filteredUser.length > 0){
         return true;
     } else {
         return false;
@@ -57,22 +57,28 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
-  const isbn = req.params.isbn;
-  const userId = req.session.authorization['username'];
-  const review = req.query.review;
-  books[isbn].reviews = {
-    "user" : userId,
-    "review" : review
-  }
-  res.send(userId + " successfully added review.")
+    const isbn = req.params.isbn;
+    const userId = req.session.authorization['username'];
+    const review = req.query.review;
+    if (books[isbn]){
+        let book = books[isbn];
+        book.reviews[userId] = review;
+        res.send("Review successfully added.");
+    } else {
+            res.status(404).json({ message : "Invalid ISBN!"});
+        }
 });
 
 // Delete review by isbn
 regd_users.delete("/auth/review/:isbn", (req, res) => {
     const isbn = req.params.isbn;
-    books[isbn].reviews = {};
-
-    return res.status(200).json({ message : "Review deleted successfully"})
+    if (books[isbn]){
+        let book = books[isbn];
+        delete book.reviews[username];
+        res.send("Review deleted successfully.");
+    } else {
+            res.status(404).json({ message : "Invalid ISBN!"});
+        }
 });
 
 module.exports.authenticated = regd_users;

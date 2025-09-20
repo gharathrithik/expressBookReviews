@@ -88,6 +88,7 @@ public_users.get('/author/:author',function (req, res) {
 });
 */
 
+// Task 12
 function getBookByAuthor(author) {
     let result = [];
     return new Promise((resolve, reject) => {
@@ -112,6 +113,7 @@ public_users.get('/author/:author',function (req, res) {
     );
 });
 
+/*
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
@@ -122,6 +124,32 @@ public_users.get('/title/:title',function (req, res) {
         res.send(books[key]);
     }
   })
+});
+*/
+
+//Task 13
+function getBookByTitle (title) {
+    let result = [];
+    return new Promise ((resolve, reject) => {
+        for (let isbn in books){
+            let book = books[isbn];
+            if(book.title === title){
+                result.push(book);
+            }
+        }
+        if(result.length != 0){
+            resolve(result);
+        } else {
+            reject("Invalid book title!");
+        }
+    })
+}
+public_users.get('/title/:title',function (req, res) {
+    const title = req.params.title;
+    getBookByTitle(title).then(
+        (book) => res.send(book),
+        (error) => res.send(error)
+    )
 });
 
 //  Get book review
