@@ -64,7 +64,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     "user" : userId,
     "review" : review
   }
-  res.send("User " + userId + " successfully added review.")
+  res.send(userId + " successfully added review.")
 });
 
 // Delete review by isbn
